@@ -36,7 +36,9 @@ void *threadMultiply(void* matData) {
     int row = data.x;
     int col = data.y;
 
-    cout << "Inside thread of row: " << row << " column : " << col << endl;
+    int threadNo = row*data.c2 + col;
+
+    cout << threadNo <<endl;
     for(int i = 0; i < data.c1; i++) {
         sum += data.matrix1[row][i] * data.matrix2[i][col];
     }
@@ -92,6 +94,7 @@ int main(int argc, char const *argv[]) {
         matData[i].c2 = c2;
     }
 
+    cout << "Threads: " <<endl;
     for(int i = 0; i < r1; i++) {
         for(int j = 0; j < c2; j++) {
             int threadNo = i*c2 + j;
