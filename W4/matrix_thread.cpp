@@ -1,7 +1,7 @@
 #include <iostream>
 #include <pthread.h>
 #include <stdlib.h>
-#include <unistd.h>
+// #include <unistd.h>
 
 using namespace std;
 
@@ -36,6 +36,7 @@ void *threadMultiply(void* matData) {
     int row = data.x;
     int col = data.y;
 
+    cout << "Inside thread of row: " << row << " column : " << col << endl;
     for(int i = 0; i < data.c1; i++) {
         sum += data.matrix1[row][i] * data.matrix2[i][col];
     }
@@ -75,8 +76,9 @@ int main(int argc, char const *argv[]) {
     struct MatData matData[r1*c2];
     pthread_t threads[r1*c2];
 
-    cout << "Provide Input For Matrixes:" << endl;    
+    cout << "Provide Input For Matrix 1:" << endl;    
     matInput(matrix1, r1, c1);
+    cout << "Provide Input For Matrix 2:" << endl;
     matInput(matrix2, r2, c2);
     
     // Initialising matData
@@ -119,7 +121,7 @@ int main(int argc, char const *argv[]) {
     cout << "The resultant matrix is:" << endl;
     printMat(matrixRes, r1, c2);
 
-    cout << "Exciting the main program!" << endl;
+    cout << "Exiting the main program!" << endl;
     pthread_exit(NULL);
 
     return 0;
