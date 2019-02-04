@@ -1,7 +1,7 @@
 #include <iostream>
 #include <pthread.h>
 #include <stdlib.h>
-// #include <unistd.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -31,6 +31,7 @@ void matInput(int** matrix, int row, int column) {
 }
 
 void *threadMultiply(void* matData) {
+    sleep(2);
     struct MatData data = *(struct MatData*)matData;
     int sum = 0;
     int row = data.x;
