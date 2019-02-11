@@ -139,7 +139,23 @@ class DFA {
                 for(int j = 0; j < nfa.nInputs; j++) {
                     string state = nfa.transitions[stateIndex][j];
                     if (state!="0") {
-                        transition[j] += state;
+                        for(int k = 0; k < state.length(); k++) {
+                            string sub = state.substr(k, 1);
+                            if (transition[j].find(sub) == std::string::npos) {
+                                transition[j] += sub;
+                            }
+
+                        }
+                        
+
+                        // if (transition[j].find(state) != std::string::npos) {
+                           
+                        // }
+                        // else {
+                        //     cout << "Pre transition is: " << transition[j] << endl;
+                        //     transition[j] += state;
+                        //     cout << "The transition is: " << transition[j] << endl;
+                        // }
                     }
                 }
             }
@@ -279,11 +295,11 @@ class DFA {
 int main() {
     NFA nfa;
     DFA dfa;
-    const char *inName = "test2.txt";
+    const char *inName = "input.txt";
 
     const char *outName = "out.txt";
+    
     nfa.deserialise(inName);
-
     cout << "\nConverting NFA to DFA ... \n" << endl;
     dfa.convertNfaToDfa(nfa);
     dfa.serialise(outName);
