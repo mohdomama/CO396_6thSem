@@ -15,9 +15,9 @@ class NFA {
         vector < string > finalStates;
         int nStates, nFstates, nInputs;
     
-        void parser() {
+        void deserialise(const char *fileName) {
             ifstream fin;
-            fin.open("test.txt");
+            fin.open(fileName);
             if(!fin) {
                 cerr << "Error in opening the file" << endl;
                 return; // if this is main
@@ -229,14 +229,63 @@ class DFA {
             cout << endl;
         }
 
+        void serialise(const char* fileName) {
+            ofstream fout;
+            fout.open(fileName);
+            if(!fout) {
+                cerr << "Error in opening the file" << endl;
+                return; // if this is main
+            }
+            
+
+            // States
+            fout << nStates << endl;
+            for(int i = 0; i < nStates; i++) {
+                fout << states[i] <<"\t";
+            }
+            fout << endl;
+            
+            // Inputs
+            fout << nInputs << endl;
+            for(int i = 0; i < nInputs; i++) {
+                fout << inputs[i] << "\t";
+            }
+            fout << endl;
+            fout << endl;
+
+            // State Transition Table
+            for(int i = 0; i < nStates; i++) {
+                for(int j = 0; j < nInputs; j++) {
+                    fout << transitions[i][j] << "\t";
+                }
+                fout << endl;
+            }
+            fout << endl;
+            
+            // Initial State
+            fout << inState << endl;
+
+            // Final States
+            fout << nFstates << endl;
+            for(int i = 0; i < nFstates; i++) {
+                fout << finalStates[i] << "\t";
+            }
+            fout << endl;
+
+        }
+
 };
 
 int main() {
     NFA nfa;
     DFA dfa;
-    nfa.parser();
+    const char *inName = "test2.txt";
+
+    const char *outName = "out.txt";
+    nfa.deserialise(inName);
 
     cout << "\nConverting NFA to DFA ... \n" << endl;
     dfa.convertNfaToDfa(nfa);
+    dfa.serialise(outName);
 
 }
