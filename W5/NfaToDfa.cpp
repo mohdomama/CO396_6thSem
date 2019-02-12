@@ -168,7 +168,28 @@ class DFA {
                 else {
                     if(find(states.begin(), states.end(), transition[i]) == states.end() ) {
                         if(find(queue.begin(), queue.end(), transition[i]) == queue.end()) {
-                            queue.push_back(transition[i]);
+                            bool arePerm = false;
+                            for(int j = 0; j < states.size(); j++) {
+                                
+                                if (arePermutation(transition[i], states[j])) {
+                                    arePerm = true;
+                                    break;
+                                }
+                            }
+
+                            if(!arePerm){
+                                for(int j = 0; j < queue.size(); j++) {
+                                   if(arePermutation(transition[i], queue[j])) {
+                                       arePerm = true;
+                                    break;
+                                   }
+                                }
+                            }
+
+                            if(!arePerm) {
+                                queue.push_back(transition[i]);
+                            } 
+                            
                         }
                     }
                 }
@@ -176,6 +197,28 @@ class DFA {
 
             transitions.push_back(transition);
         }
+
+        bool arePermutation(string str1, string str2) { 
+            // Get lenghts of both strings 
+            int n1 = str1.length(); 
+            int n2 = str2.length(); 
+        
+            // If length of both strings is not same, 
+            // then they cannot be Permutation 
+            if (n1 != n2) 
+            return false; 
+        
+            // Sort both strings 
+            sort(str1.begin(), str1.end()); 
+            sort(str2.begin(), str2.end()); 
+        
+            // Compare sorted strings 
+            for (int i = 0; i < n1;  i++) 
+            if (str1[i] != str2[i]) 
+                return false; 
+        
+            return true; 
+        } 
 
         void convertNfaToDfa(NFA nfa) {
             inState = nfa.inState;
