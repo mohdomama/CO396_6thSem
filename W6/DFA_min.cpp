@@ -88,6 +88,7 @@ class DFA {
                                 
                                 match = true;
                                 array[i][j] = true;
+                                array[j][i] = true;
                             };
                         }
                     }
