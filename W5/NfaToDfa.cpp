@@ -144,18 +144,7 @@ class DFA {
                             if (transition[j].find(sub) == std::string::npos) {
                                 transition[j] += sub;
                             }
-
                         }
-                        
-
-                        // if (transition[j].find(state) != std::string::npos) {
-                           
-                        // }
-                        // else {
-                        //     cout << "Pre transition is: " << transition[j] << endl;
-                        //     transition[j] += state;
-                        //     cout << "The transition is: " << transition[j] << endl;
-                        // }
                     }
                 }
             }
@@ -166,32 +155,27 @@ class DFA {
                     trapFlag = true;
                 }
                 else {
-                    if(find(states.begin(), states.end(), transition[i]) == states.end() ) {
-                        if(find(queue.begin(), queue.end(), transition[i]) == queue.end()) {
-                            bool arePerm = false;
-                            for(int j = 0; j < states.size(); j++) {
-                                
-                                if (arePermutation(transition[i], states[j])) {
-                                    arePerm = true;
-                                    break;
-                                }
-                            }
-
-                            if(!arePerm){
-                                for(int j = 0; j < queue.size(); j++) {
-                                   if(arePermutation(transition[i], queue[j])) {
-                                       arePerm = true;
-                                    break;
-                                   }
-                                }
-                            }
-
-                            if(!arePerm) {
-                                queue.push_back(transition[i]);
-                            } 
-                            
+                    bool arePerm = false;
+                    for(int j = 0; j < states.size(); j++) {
+                        
+                        if (arePermutation(transition[i], states[j])) {
+                            arePerm = true;
+                            break;
                         }
                     }
+
+                    if(!arePerm){
+                        for(int j = 0; j < queue.size(); j++) {
+                            if(arePermutation(transition[i], queue[j])) {
+                                arePerm = true;
+                            break;
+                            }
+                        }
+                    }
+
+                    if(!arePerm) {
+                        queue.push_back(transition[i]);
+                    } 
                 }
             }
 
@@ -206,7 +190,7 @@ class DFA {
             // If length of both strings is not same, 
             // then they cannot be Permutation 
             if (n1 != n2) 
-            return false; 
+                return false; 
         
             // Sort both strings 
             sort(str1.begin(), str1.end()); 
@@ -225,6 +209,7 @@ class DFA {
             nInputs = nfa.nInputs;
             inputs = nfa.inputs;
 
+            // Main conversion logic
             queue.push_back(nfa.inState);
             while(queue.size() > 0) {
                 string newState = queue.back();
@@ -233,6 +218,7 @@ class DFA {
                 newTransition(newState, nfa);
             }
 
+            // Add a trap state if DFA requires one
             if(trapFlag) {
                 vector < string > transition;
                 for(int i = 0; i < nfa.nInputs; i++) {
@@ -243,6 +229,7 @@ class DFA {
             }
             nStates = states.size();
 
+            // Set final states of the DFA
             for(int i = 0; i < nStates; i++) {
                 for(int j = 0; j < nfa.nFstates; j++) {
                     if (states[i].find(nfa.finalStates[j]) != string::npos) {
@@ -252,6 +239,7 @@ class DFA {
                 }
             }
             nFstates = finalStates.size();
+
             cout <<"The DFA formed is:\n" << endl;
             printDfa();
         }
