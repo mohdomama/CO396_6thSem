@@ -1,0 +1,77 @@
+12345678
+
+CREATE TABLE train_details (train_no INT NOT NULL PRIMARY KEY,
+     train_name VARCHAR(50),
+     exp_arr TIME,
+     exp_dep TIME);
+
+
+CREATE TABLE real_time ( train_no INT NOT NULL,
+     mon_arr TIME,
+     mod_dep TIME,
+     tue_arr TIME,
+     tue_dep TIME,
+     wed_arr TIME,
+     wed_dep TIME,
+     thurs_arr TIME,
+     thurs_dep TIME,
+     fri_arr TIME,
+     fri_dep TIME,
+     sat_arr TIME,
+     sat_dep TIME,
+     sun_arr TIME,
+     sun_dep TIME,
+
+     FOREIGN KEY (train_no)
+     REFERENCES train_details(train_no) 
+     ON DELETE CASCADE);
+
+
+
+INSERT INTO train_details values(12345,'Shatabti','01:02:00','02:03:00');
+
+INSERT INTO train_details values(23451,'Poorva','04:02:00','05:53:00');
+
+INSERT INTO train_details values(34512,'Vaishali','03:02:00','04:30:00');
+
+INSERT INTO train_details values(45123,'Maghad','03:20:00','03:30:00');
+
+INSERT INTO train_details values(51234,'GareebRath','01:00:00','04:30:00');
+
+
+
+INSERT INTO real_time values(12345,'01:02:00','02:30:00','01:20:00','02:50:00','01:10:00','02:07:00','01:30:00','02:03:00','01:15:00','02:15:00','01:09:00','02:27:00','01:14:00','02:19:00');
+
+INSERT INTO real_time values(23451,'04:02:00','05:53:00','04:20:00','06:00:00','04:10:00','06:07:00','04:30:00','06:03:00','04:15:00','06:15:00','04:09:00','06:27:00','04:14:00','06:19:00');
+
+INSERT INTO real_time values(34512,'03:02:00','04:30:00','03:24:00','04:45:00','03:10:00','04:47:00','03:31:00','04:53:00','03:15:00','04:37:00','03:09:00','04:30:00','03:14:00','04:39:00');
+
+INSERT INTO real_time values(45123,'03:30:00','03:40:00','03:20:00','03:50:00','03:30:00','04:00:00','03:27:00','04:10:00','03:25:00','03:50:00','03:29:00','03:47:00','03:20:00','03:40:00');
+
+INSERT INTO real_time values(51234,'01:02:00','04:30:00','01:20:00','04:50:00','01:10:00','05:00:00','01:30:00','04:55:00','01:15:00','05:15:00','01:09:00','04:37:00','01:14:00','04:49:00');
+
+
+
+create view delays as
+select train_details.train_no,train_details.train_name,
+time_to_sec(real_time.mod_dep)-time_to_sec(train_details.exp_dep)+
+time_to_sec(real_time.tue_dep)-time_to_sec(train_details.exp_dep)+
+time_to_sec(real_time.wed_dep)-time_to_sec(train_details.exp_dep)+
+time_to_sec(real_time.thurs_dep)-time_to_sec(train_details.exp_dep)+
+time_to_sec(real_time.fri_dep)-time_to_sec(train_details.exp_dep)+
+time_to_sec(real_time.sat_dep)-time_to_sec(train_details.exp_dep)+
+time_to_sec(real_time.sun_dep)-time_to_sec(train_details.exp_dep) as totalDepDelay,
+time_to_sec(real_time.mon_arr)-time_to_sec(train_details.exp_arr)+
+time_to_sec(real_time.tue_arr)-time_to_sec(train_details.exp_arr)+
+time_to_sec(real_time.wed_arr)-time_to_sec(train_details.exp_arr)+
+time_to_sec(real_time.thurs_arr)-time_to_sec(train_details.exp_arr)+
+time_to_sec(real_time.fri_arr)-time_to_sec(train_details.exp_arr)+
+time_to_sec(real_time.sat_arr)-time_to_sec(train_details.exp_arr)+
+time_to_sec(real_time.sun_arr)-time_to_sec(train_details.exp_arr) as totalArrDelay
+from train_details,real_time
+where train_details.train_no=real_time.train_no;
+
+SET @minimum = (select min(totalDepDelay) from delays);
+
+SELECT * FROM delays
+WHERE totalDepDelay = @minimum;
