@@ -27,6 +27,21 @@ CREATE TABLE real_time ( train_no INT NOT NULL,
      ON DELETE CASCADE);
 
 
+CREATE TABLE stations ( train_no INT NOT NULL,
+     Aligrarh BOOLEAN,
+     Lucknow BOOLEAN,
+     Delhi BOOLEAN,
+     Kanpur BOOLEAN,
+     Banglore BOOLEAN,
+     Saharanpur BOOLEAN,
+     Meerut BOOLEAN,
+
+     FOREIGN KEY (train_no)
+     REFERENCES train_details(train_no) 
+     ON DELETE CASCADE);
+
+
+
 
 INSERT INTO train_details values(12345,'Shatabti','01:02:00','02:03:00');
 
@@ -46,10 +61,13 @@ INSERT INTO real_time values(23451,'04:02:00','05:53:00','04:20:00','06:00:00','
 
 INSERT INTO real_time values(34512,'03:02:00','04:30:00','03:24:00','04:45:00','03:10:00','04:47:00','03:31:00','04:53:00','03:15:00','04:37:00','03:09:00','04:30:00','03:14:00','04:39:00');
 
-INSERT INTO real_time values(45123,'03:30:00','03:40:00','03:20:00','03:50:00','03:30:00','04:00:00','03:27:00','04:10:00','03:25:00','03:50:00','03:29:00','03:47:00','03:20:00','03:40:00');
 
-INSERT INTO real_time values(51234,'01:02:00','04:30:00','01:20:00','04:50:00','01:10:00','05:00:00','01:30:00','04:55:00','01:15:00','05:15:00','01:09:00','04:37:00','01:14:00','04:49:00');
 
+INSERT INTO stations VALUES(12345, true, true, false, false, true, true, false);
+INSERT INTO stations VALUES(23451, true, false, false, true, true, true, false);
+INSERT INTO stations VALUES(34512, true, false, false, false, true, true, true);
+INSERT INTO stations VALUES(45123, false, true, false, false, true, false, true);
+INSERT INTO stations VALUES(51234, false, true, true, false, true, false, true);
 
 
 create view delays as
@@ -75,3 +93,27 @@ SET @minimum = (select min(totalDepDelay) from delays);
 
 SELECT * FROM delays
 WHERE totalDepDelay = @minimum;
+
+
+
+
+
+
+
+
+
+SELECT train_details.train_no, train_details.train_name
+FROM train_details
+INNER JOIN stations ON train_details.train_no=stations.train_no
+WHERE stations.Aligarh=true;
+
+
+SELECT train_details.train_no, train_details.train_name, stations.Aligarh
+FROM train_details
+INNER JOIN stations ON train_details.train_no=stations.train_no;
+
+
+
+
+
+
